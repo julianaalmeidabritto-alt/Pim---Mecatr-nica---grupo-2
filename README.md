@@ -14,7 +14,7 @@ Montagem do robô Otto DIY com Arduino Nano, shield de expansão, 4 servomotores
 
 ### Estrutura
 - `fase-1/relatorios/`: relatórios técnicos AV1_P1 a AV1_P4 (montagem, ligações, calibração e testes, modelagem da dança)
-- `fase-1/corrida-de-obstaculos/`: código `OttoS_BLE.ino` da corrida de obstáculos
+- `fase-1/codigo/`: código `OttoS_BLE.ino` gravado no robô (Arduino Nano), com controle por Bluetooth e três funções novas: valsa (Rede de Petri), corrida de obstáculos e inspetor com sensor ultrassônico (estados, alerta sonoro e botão virtual por proximidade)
 - `fase-1/danca/`: Rede de Petri da "Valsa do Otto" (arquivo HPSim)
 - `fase-1/aplicacao-na-engenharia/`: Rede de Petri do Sistema de Vigilância Otto (mapeamento, vigilância e alerta)
 
