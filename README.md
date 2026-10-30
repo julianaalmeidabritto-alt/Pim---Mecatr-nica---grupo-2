@@ -23,4 +23,51 @@ Montagem do robô Otto DIY com Arduino Nano, shield de expansão, 4 servomotores
 - Vídeo 2: https://drive.google.com/file/d/1HO5cToMnC6fx4-v974Nx6B1jUZ8hcoKo/view
 
 ## Fase 2: Proposta do projeto mecatrônico
-Em elaboração, na pasta `fase-2/`.
+Em elaboração, na pasta `fase-2/`. 
+# PIM — Fase 2: Proposta do Projeto Mecatrônico (Retroescavadeira)
+
+**Disciplina:** Informática Aplicada  
+**Docente:** Prof. Robson Marinho  
+**Colegiado:** Engenharia Civil — Departamento de Ciências Exatas e da Terra I (DCET I)  
+**Instituição:** Universidade do Estado da Bahia (UNEB)  
+**Equipe:** Juliana Almeida, Luan Pereira e Marcelo Custódio  
+**Laboratório:** INOVAMECH  
+
+---
+
+## 📋 Visão Geral da Fase 2
+
+Este repositório contém a documentação técnica referente à **Fase 2 do Projeto de Prototipagem para Inovação Mecatrônica (PIM — AV2_P1)**. 
+
+O projeto consiste na concepção e detalhamento de uma **Retroescavadeira Mecatrônica Articulada de 4 Graus de Liberdade (4-DoF)**, desenvolvida para automação, precisão geométrica e redução de riscos operacionais na Engenharia Civil.
+
+---
+
+## 📑 Estrutura da Documentação (Arquivos PDF)
+
+A entrega da proposta foi dividida e organizada em três documentos técnicos individuais conforme as diretrizes da disciplina:
+
+| Arquivo PDF | Tópico | Descrição do Conteúdo |
+| :--- | :--- | :--- |
+| 📄 `topico_2_proposta.pdf` | **2. Proposta do Projeto** | Descrição do problema na Engenharia Civil, objetivos, solução mecânica detalhada (PLA, tirantes Ø1.5mm, juntas e geometria da caçamba em V), pré-visualização CAD Fusion 360 e funcionalidades esperadas. |
+| 📄 `topico_3_arquitetura.pdf` | **3. Arquitetura Mecatrônica** | Especificação dos componentes (Arduino Nano, servos SG90/MG995, sensor HC-SR04), diagrama de blocos do sistema e detalhamento da integração entre mecânica, eletrônica, controle e segurança. |
+| 📄 `topico_5_viabilidade.pdf` | **5. Viabilidade do Projeto** | Justificativa técnica dos materiais, análise de esforço x limite elástico do PLA, tempo de manufatura aditiva (15–20h) e cronograma de execução no laboratório INOVAMECH. |
+
+---
+
+## 🎨 Identidade Visual e Padrão Técnico
+
+Os documentos foram padronizados nas cores **Azul** e **Amarelo/Dourado** (alusão ao maquinário pesado de terraplenagem), com cabeçalho institucional completo e rigor técnico conforme as normas da ABNT e as diretrizes do Colegiado de Engenharia Civil da UNEB.
+
+---
+
+## 🛠️ Tecnologias e Ferramentas Utilizadas
+
+* **CAD / Prototipagem:** Autodesk Fusion 360
+* **Manufatura Aditiva:** Impressão 3D (Termoplástico PLA)
+* **Controle e Processamento:** Arduino (C/C++ / `Servo.h`)
+* **Atuadores e Sensores:** Servomotores SG90/MG995 e Sensor Ultrassônico HC-SR04
+
+feat: adiciona documentos pdf da fase 2 (topicos 2, 3 e 5 - retroescavadeira)
+
+docs: adiciona readme detalhado com a estrutura da fase 2 do projeto mecatronico
