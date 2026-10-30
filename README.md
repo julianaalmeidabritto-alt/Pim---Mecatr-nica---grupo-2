@@ -55,9 +55,6 @@ A entrega da proposta foi dividida e organizada em três documentos técnicos in
 
 ---
 
-## 🎨 Identidade Visual e Padrão Técnico
-
-Os documentos foram padronizados nas cores **Azul** e **Amarelo/Dourado** (alusão ao maquinário pesado de terraplenagem), com cabeçalho institucional completo e rigor técnico conforme as normas da ABNT e as diretrizes do Colegiado de Engenharia Civil da UNEB.
 
 ---
 
@@ -68,6 +65,3 @@ Os documentos foram padronizados nas cores **Azul** e **Amarelo/Dourado** (alus�
 * **Controle e Processamento:** Arduino (C/C++ / `Servo.h`)
 * **Atuadores e Sensores:** Servomotores SG90/MG995 e Sensor Ultrassônico HC-SR04
 
-feat: adiciona documentos pdf da fase 2 (topicos 2, 3 e 5 - retroescavadeira)
-
-docs: adiciona readme detalhado com a estrutura da fase 2 do projeto mecatronico
