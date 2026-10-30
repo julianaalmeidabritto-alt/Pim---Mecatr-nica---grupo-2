@@ -22,8 +22,7 @@ Montagem do robô Otto DIY com Arduino Nano, shield de expansão, 4 servomotores
 - Vídeo 1: https://drive.google.com/file/d/1ZWeRxMEs-itds_s8hMKcQkS-vprJxjhR/view
 - Vídeo 2: https://drive.google.com/file/d/1HO5cToMnC6fx4-v974Nx6B1jUZ8hcoKo/view
 
-## Fase 2: Proposta do projeto mecatrônico
-Em elaboração, na pasta `fase-2/`. 
+
 # PIM — Fase 2: Proposta do Projeto Mecatrônico (Retroescavadeira)
 
 **Disciplina:** Informática Aplicada  
