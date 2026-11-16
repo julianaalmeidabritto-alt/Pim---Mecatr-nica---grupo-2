@@ -98,3 +98,25 @@ Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T
 ```bash
 pip install numpy
 python rede_petri.py
+
+Etapa 2: Rede de Petri Colorida (CPN Tools)
+Modelagem de alto nível com rastreamento de atuadores e temporização das operações.
+
+Declarações Globais (CPN ML)
+Colorsets:
+
+colset ETAPA = with INICIO | POS_BRACO | ESCAVAR | GIRAR_TORRE | DESPEJAR | FIM;
+
+colset ATU = with NSA | CIL_LANCA | CIL_BRACO | CIL_CONCHA | MOTOR_GIRO;
+
+colset LISTA_ATU = list ATU;
+
+colset RETRO_OP = product STRING * ETAPA * LISTA_ATU * INT * INT;
+
+Variáveis: id (STRING), etapa (ETAPA), atu_list (LISTA_ATU), dur, t, durE, tE, durG, tG (INT).
+
+Função de Sincronização:
+fun maxTime(tE, durE, tG, durG) = Int.max(tE + durE, tG + durG);
+
+Fluxo Temporal da Ficha ("C1")Início (INÍCIO): 1("C1", INICIO, [NSA], 0, 0)`Posicionamento (A: POS_BRAÇO): ("C1", POS_BRACO, [CIL_LANCA, CIL_BRACO], 3, 0) (duração: 3 u.t.)Execução Paralela (>B>C):B: ESCAVAR: ("C1", ESCAVAR, [CIL_BRACO, CIL_CONCHA], 5, 3) (término em $t = 8$ u.t.)C: GIRAR TORRE: ("C1", GIRAR_TORRE, [MOTOR_GIRO], 4, 3) (término em $t = 7$ u.t.)Sincronização (>D → DESPEJAR): maxTime(3, 5, 3, 4) = 8 → ("C1", DESPEJAR, [CIL_CONCHA], 2, 8)Encerramento (>Fim → FIM): ("C1", FIM, [NSA], 0, 10) (tempo total do ciclo: 10 u.t.)
+
