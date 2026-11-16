@@ -10,15 +10,24 @@ Projeto Integrado Multidisciplinar com o robô bípede Otto DIY e prototipagem d
 
 ---
 
+## 📑 Índice
+- [Fase 1: Robô Otto DIY](#-fase-1-montagem-programação-e-modelagem-do-otto)
+- [Fase 2: Retroescavadeira 4-DoF](#-fase-2-proposta-do-projeto-mecatrônico-retroescavadeira)
+- [Modelagem com Redes de Petri](#-modelagem-com-redes-de-petri--projeto-retroescavadeira)
+  - [Etapa 1: HPSim e Python](#etapa-1-rede-de-petri-lugar-transição-e-álgebra-linear-hpsim--python)
+  - [Etapa 2: CPN Tools](#etapa-2-rede-de-petri-colorida-cpn-tools)
+
+---
+
 ## 🤖 Fase 1: Montagem, programação e modelagem do Otto
 
 Montagem do robô Otto DIY com Arduino Nano, shield de expansão, 4 servomotores SG90, sensor ultrassônico HC-SR04 e buzzer, com estrutura impressa em 3D.
 
-### Estrutura de Arquivos (Fase 1)
+### Estrutura de Arquivos (`fase-1/`)
 - `fase-1/relatorios/`: relatórios técnicos `AV1_P1` a `AV1_P4` (montagem, ligações, calibração e testes, modelagem da dança).
 - `fase-1/codigo/`: código `OttoS_BLE.ino` gravado no robô (Arduino Nano), com controle por Bluetooth e três funções novas: valsa (Rede de Petri), corrida de obstáculos e inspetor com sensor ultrassônico (estados, alerta sonoro e botão virtual por proximidade).
-- `fase-1/danca/`: Rede de Petri da *"Valsa do Otto"* (arquivo HPSim).
-- `fase-1/aplicacao-na-engenharia/`: Rede de Petri do *Sistema de Vigilância Otto* (mapeamento, vigilância e alerta).
+- `fase-1/Rede petri danca/`: Rede de Petri da *"Valsa do Otto"* (arquivo HPSim).
+- `fase-1/Rede petri aplicacao na engenharia/`: Rede de Petri do *Sistema de Vigilância Otto* (mapeamento, vigilância e alerta).
 
 ### Vídeos dos Testes
 - [Vídeo 1 — Teste de movimentação e sensores](https://drive.google.com/file/d/1ZWeRxMEs-itds_s8hMKcQkS-vprJxjhR/view)
@@ -38,14 +47,14 @@ O projeto consiste na concepção e no detalhamento de uma **Retroescavadeira Me
 
 ---
 
-### 📑 Estrutura da Documentação
+### 📑 Estrutura da Documentação (`fase-2/documentos/`)
 
 | Arquivo | Tópico | Descrição do conteúdo |
 | :--- | :--- | :--- |
-| 📄 `topico_2_proposta.pdf` | **2. Proposta do Projeto** | Problema na Engenharia Civil, objetivos, solução mecânica (PLA, tirantes de aço inox Ø1,5 mm, juntas, giro da torre e caçamba em V), modelagem preliminar no Fusion 360 e funcionalidades esperadas. |
-| 📄 `topico_3_arquitetura.pdf` | **3. Arquitetura Mecatrônica** | Componentes e materiais (Arduino Nano, servos MG995/SG90, sensor HC-SR04, eixos M3 e buchas de latão), diagrama de blocos e integração entre mecânica, eletrônica, controle e segurança. |
-| 🔷 `Rede_Petri_Retroescavadeira.hps` e `rede_petri_retroescavadeira.jpeg` | **4. Modelagem inicial** | Rede de Petri do ciclo da retroescavadeira (arquivo HPSim e imagem). O diagrama funcional encontra-se detalhado no tópico 3. |
-| 📄 `topico_5_viabilidade.pdf` | **5. Viabilidade do Projeto** | Justificativa dos materiais (PLA, aço inox M3, servos MG995/SG90, Arduino), recursos disponíveis no INOVAMECH, tempo estimado de impressão 3D (18 a 22 horas), ciclo PIM de execução e ações preventivas (capacitores de 470 µF e lubrificação com PTFE). |
+| 📄 `Proposta do Projeto (Tópico 2) (1).pdf` | **2. Proposta do Projeto** | Problema na Engenharia Civil, objetivos, solução mecânica (PLA, tirantes de aço inox Ø1,5 mm, juntas, giro da torre e caçamba em V), modelagem preliminar no Fusion 360 e funcionalidades esperadas. |
+| 📄 `Arquitetura Mecatrônica do Sistema (Tópico 3)...pdf` | **3. Arquitetura Mecatrônica** | Componentes e materiais (Arduino Nano, servos MG995/SG90, sensor HC-SR04, eixos M3 e buchas de latão), diagrama de blocos e integração entre mecânica, eletrônica, controle e segurança. |
+| 🔷 `Rede_Petri_Retroescavadeira.hps` | **4. Modelagem inicial** | Rede de Petri do ciclo da retroescavadeira (arquivo HPSim na pasta `simulacoes`). O diagrama funcional encontra-se detalhado no tópico 3. |
+| 📄 `Viabilidade do Projeto (Tópico 5).pdf` | **5. Viabilidade do Projeto** | Justificativa dos materiais (PLA, aço inox M3, servos MG995/SG90, Arduino), recursos disponíveis no INOVAMECH, tempo estimado de impressão 3D (18 a 22 horas), ciclo PIM de execução e ações preventivas (capacitores de 470 µF e lubrificação com PTFE). |
 
 ---
 
@@ -63,12 +72,12 @@ O projeto consiste na concepção e no detalhamento de uma **Retroescavadeira Me
 
 Documentação técnica das modelagens, formulação matricial e simulações computacionais desenvolvidas para o ciclo operacional do braço mecânico articulado (retroescavadeira).
 
-### Estrutura de Arquivos (Redes de Petri)
-- 📄 `Relatório Técnico - Redes de Petri .pdf` — Relatório técnico completo contendo a formulação matemática, modelagem no HPSim, simulação em Python e modelagem de alto nível no CPN Tools.
-- 🐍 `rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação da evolução das marcações (`M0` a `M5`).
-- 🖼️ `rede_petri.re..png` — Captura da saída de execução no terminal validando as matrizes `Pre`, `Post`, `C` e a evolução das marcações.
-- 🔷 `Rede Petri _Retro.hps` — Modelagem da Rede de Petri Lugar-Transição no software **HPSim**.
-- 🎨 `Rede Petri_Escavadeira_Final_colorida.cpn` — Modelagem da Rede de Petri Colorida no software **CPN Tools**.
+### Estrutura de Arquivos (`fase-2/`)
+- 📄 `fase-2/documentos/Relatório Técnico - Redes de Petri .pdf` — Relatório técnico completo contendo a formulação matemática, modelagem no HPSim, simulação em Python e modelagem de alto nível no CPN Tools.
+- 🐍 `fase-2/codigo-python/rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação da evolução das marcações (`M0` a `M5`).
+- 🖼️ `fase-2/codigo-python/rede_petri.re..png` — Captura da saída de execução no terminal validando as matrizes `Pre`, `Post`, `C` e a evolução das marcações.
+- 🔷 `fase-2/simulacoes/Rede Petri _Retro.hps` — Modelagem da Rede de Petri Lugar-Transição no software **HPSim**.
+- 🎨 `fase-2/simulacoes/Rede Petri_Escavadeira_Final_colorida.cpn` — Modelagem da Rede de Petri Colorida no software **CPN Tools**.
 
 ---
 
@@ -101,7 +110,7 @@ Rede composta por **6 lugares** (`P1` a `P6`) e **5 transições** (`T1` a `T5`)
 
 ```bash
 pip install numpy
-python rede_petri.py
+python fase-2/codigo-python/rede_petri.py
 ```
 
 <details>
@@ -166,7 +175,7 @@ for k, t in enumerate(["T1", "T2", "T3", "T4", "T5"], start=1):
 
 #### Saída da Simulação Computacional
 
-![Saída da execução do script rede_petri.py](rede_petri.re..png)
+![Saída da execução do script rede_petri.py](fase-2/codigo-python/rede_petri.re..png)
 
 ---
 
