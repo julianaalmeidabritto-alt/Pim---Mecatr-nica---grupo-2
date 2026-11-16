@@ -65,8 +65,8 @@ Documentação técnica das modelagens, formulação matricial e simulações co
 
 ### Estrutura de Arquivos (Redes de Petri)
 - 📄 `Relatório Técnico - Redes de Petri .pdf` — Relatório técnico completo contendo a formulação matemática, modelagem no HPSim, simulação em Python e modelagem de alto nível no CPN Tools.
-- 🐍 `rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação da evolução das marcações ($M_0$ a $M_5$).
-- 🖼️ `rede_petri.re..png` — Captura da saída de execução no terminal validando as matrizes $Pre$, $Post$, $C$ e a evolução das marcações.
+- 🐍 `rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação da evolução das marcações (`M0` a `M5`).
+- 🖼️ `rede_petri.re..png` — Captura da saída de execução no terminal validando as matrizes `Pre`, `Post`, `C` e a evolução das marcações.
 - 🔷 `Rede Petri _Retro.hps` — Modelagem da Rede de Petri Lugar-Transição no software **HPSim**.
 - 🎨 `Rede Petri_Escavadeira_Final_colorida.cpn` — Modelagem da Rede de Petri Colorida no software **CPN Tools**.
 
@@ -74,13 +74,13 @@ Documentação técnica das modelagens, formulação matricial e simulações co
 
 ### Etapa 1: Rede de Petri Lugar-Transição e Álgebra Linear (HPSim + Python)
 
-Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T_5$) representando o ciclo contínuo e reversível da retroescavadeira (livre de *deadlocks*):
+Rede composta por **6 lugares** (`P1` a `P6`) e **5 transições** (`T1` a `T5`) representando o ciclo contínuo e reversível da retroescavadeira (livre de *deadlocks*):
 - **Lugares:** `P1_Início`, `P2_Pós_Braço`, `P3_Escavar`, `P4_Girar Torre`, `P5_Despejar`, `P6_FIM`.
 - **Transições:** `T1_Posicionar`, `T2_Transição(Decisão)` (paralelismo), `T3_Sincronização`, `T4_Finalizar`, `T5_Aguardando` (retorno cíclico).
 
-#### Matrizes de Entrada ($Pre$), Saída ($Post$) e Incidência ($C = Post - Pre$)
+#### Matrizes de Entrada (`Pre`), Saída (`Post`) e Incidência (`C = Post - Pre`)
 
-| Lugar | $Pre$ ($T_1 \dots T_5$) | $Post$ ($T_1 \dots T_5$) | $C = Post - Pre$ ($T_1 \dots T_5$) |
+| Lugar | `Pre` (`T1` ... `T5`) | `Post` (`T1` ... `T5`) | `C = Post - Pre` (`T1` ... `T5`) |
 | :--- | :---: | :---: | :---: |
 | **P1 (Início)** | `[1, 0, 0, 0, 0]` | `[0, 0, 0, 0, 1]` | `[-1,  0,  0,  0,  1]` |
 | **P2 (Pós_Braço)** | `[0, 1, 0, 0, 0]` | `[1, 0, 0, 0, 0]` | `[ 1, -1,  0,  0,  0]` |
@@ -89,13 +89,13 @@ Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T
 | **P5 (Despejar)** | `[0, 0, 0, 1, 0]` | `[0, 0, 1, 0, 0]` | `[ 0,  0,  1, -1,  0]` |
 | **P6 (FIM)** | `[0, 0, 0, 0, 1]` | `[0, 0, 0, 1, 0]` | `[ 0,  0,  0,  1, -1]` |
 
-#### Evolução das Marcações ($M_k = M_{k-1} + C \cdot \sigma_k$)
-- **$M_0$:** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']`
-- **$M_1$ (após $T_1$):** `[0, 1, 0, 0, 0, 0]` — Habilitada: `['T2']`
-- **$M_2$ (após $T_2$):** `[0, 0, 1, 1, 0, 0]` — Habilitada: `['T3']` *(execução paralela em $P_3$ e $P_4$)*
-- **$M_3$ (após $T_3$):** `[0, 0, 0, 0, 1, 0]` — Habilitada: `['T4']` *(sincronização concluída)*
-- **$M_4$ (após $T_4$):** `[0, 0, 0, 0, 0, 1]` — Habilitada: `['T5']`
-- **$M_5$ (após $T_5$):** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']` *(retorno cíclico à marcação inicial)*
+#### Evolução das Marcações (`M_k = M_{k-1} + C * sigma_k`)
+- **M<sub>0</sub>:** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']`
+- **M<sub>1</sub> (após T1):** `[0, 1, 0, 0, 0, 0]` — Habilitada: `['T2']`
+- **M<sub>2</sub> (após T2):** `[0, 0, 1, 1, 0, 0]` — Habilitada: `['T3']` *(execução paralela em P3 e P4)*
+- **M<sub>3</sub> (após T3):** `[0, 0, 0, 0, 1, 0]` — Habilitada: `['T4']` *(sincronização concluída)*
+- **M<sub>4</sub> (após T4):** `[0, 0, 0, 0, 0, 1]` — Habilitada: `['T5']`
+- **M<sub>5</sub> (após T5):** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']` *(retorno cíclico à marcação inicial)*
 
 #### Execução e Validação em Python
 
