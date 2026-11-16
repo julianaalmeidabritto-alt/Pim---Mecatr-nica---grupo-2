@@ -196,17 +196,17 @@ fun maxTime(tE, durE, tG, durG) = Int.max(tE + durE, tG + durG);
 #### Fluxo Temporal da Ficha (`"C1"`)
 
 1. **Início (`INICIO`):**
-   - Marcação inicial: `1`("C1", INICIO, [NSA], 0, 0)`
+   - Marcação inicial: `1` `("C1", INICIO, [NSA], 0, 0)`
 2. **Transição `A` — Posicionamento (`A: POS_BRAÇO`):**
-   - Saída: `("C1", POS_BRACO, [CIL_LANCA, CIL_BRACO], 3, 0)` *(duração: $3\text{ u.t.}$ a partir de $t = 0$)*
+   - Saída: `("C1", POS_BRACO, [CIL_LANCA, CIL_BRACO], 3, 0)` *(duração: 3 u.t. a partir de t = 0)*
 3. **Transição `>B>C` — Execução Paralela (`B` e `C`):**
-   - **B (`B: ESCAVAR`):** `("C1", ESCAVAR, [CIL_BRACO, CIL_CONCHA], 5, 3)` *(duração: $5\text{ u.t.}$, término em $t = 8\text{ u.t.}$)*
-   - **C (`C: GIRAR TORRE`):** `("C1", GIRAR_TORRE, [MOTOR_GIRO], 4, 3)` *(duração: $4\text{ u.t.}$, término em $t = 7\text{ u.t.}$)*
+   - **B (`B: ESCAVAR`):** `("C1", ESCAVAR, [CIL_BRACO, CIL_CONCHA], 5, 3)` *(duração: 5 u.t., término em t = 8 u.t.)*
+   - **C (`C: GIRAR TORRE`):** `("C1", GIRAR_TORRE, [MOTOR_GIRO], 4, 3)` *(duração: 4 u.t., término em t = 7 u.t.)*
 4. **Transições `B>D` e `C>D` — Troca de Atuadores:**
    - **Lugar `B>D Troca Atuador`:** `("C1", ESCAVAR, [CIL_CONCHA], 5, 3)`
    - **Lugar `C>D Troca Atuador`:** `("C1", GIRAR_TORRE, [CIL_CONCHA], 4, 3)`
 5. **Transição `>D` — Sincronização Temporal (`DESPEJAR`):**
    - Cálculo: `maxTime(3, 5, 3, 4) = Int.max(8, 7) = 8`
-   - Saída: `("C1", DESPEJAR, [CIL_CONCHA], 2, 8)` *(início em $t = 8\text{ u.t.}$, duração: $2\text{ u.t.}$)*
+   - Saída: `("C1", DESPEJAR, [CIL_CONCHA], 2, 8)` *(início em t = 8 u.t., duração: 2 u.t.)*
 6. **Transição `>Fim` — Encerramento (`FIM`):**
-   - Saída: `("C1", FIM, [NSA], 0, 10)` *(tempo total do ciclo: $10\text{ u.t.}$)*
+   - Saída: `("C1", FIM, [NSA], 0, 10)` *(tempo total do ciclo: 10 u.t.)*
