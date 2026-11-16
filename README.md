@@ -99,6 +99,8 @@ Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T
 pip install numpy
 python rede_petri.py
 
+---
+
 Etapa 2: Rede de Petri Colorida (CPN Tools)
 Modelagem de alto nível com rastreamento de atuadores e temporização das operações.
 
