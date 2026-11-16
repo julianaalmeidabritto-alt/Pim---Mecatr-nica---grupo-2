@@ -23,14 +23,6 @@ Montagem do robô Otto DIY com Arduino Nano, shield de expansão, 4 servomotores
 - Vídeo 2: https://drive.google.com/file/d/1HO5cToMnC6fx4-v974Nx6B1jUZ8hcoKo/view
 
 # PIM - Fase 2: Proposta do Projeto Mecatrônico (Retroescavadeira)
-
-**Disciplina:** Informática Aplicada  
-**Docente:** Prof. Robson Marinho  
-**Colegiado:** Engenharia Civil - Departamento de Ciências Exatas e da Terra I (DCET I)  
-**Instituição:** Universidade do Estado da Bahia (UNEB)  
-**Equipe:** Juliana Almeida, Luan Pereira e Marcelo Custódio  
-**Laboratório:** INOVAMECH  
-
 ---
 
 ## 📋 Visão Geral da Fase 2
@@ -61,3 +53,48 @@ O projeto consiste na concepção e no detalhamento de uma **Retroescavadeira Me
 * **Controle e Processamento:** Arduino Nano (C/C++, `Servo.h`)
 * **Atuadores e Sensores:** Servomotores MG995 e SG90, sensor ultrassônico HC-SR04
 * **Modelagem:** HPSim (Redes de Petri)
+
+---
+
+## Modelagem com Redes de Petri — Projeto Retroescavadeira
+
+Documentação técnica das modelagens, formulação matricial e simulações computacionais desenvolvidas para o ciclo operacional do braço mecânico articulado (retroescavadeira).
+
+---
+
+### Estrutura de Arquivos do Repositório
+* `rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação de evolução das marcações ($M_0$ a $M_5$).
+* `Rede Petri _Retro.hps` — Modelagem da Rede de Petri Lugar-Transição no software **HPSim**.
+* `Rede Petri_Escavadeira_Final_colorida.cpn` — Modelagem da Rede de Petri Colorida no software **CPN Tools**.
+
+---
+
+### Etapa 1: Rede de Petri Lugar-Transição e Álgebra Linear (HPSim + Python)
+
+Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T_5$) representando o ciclo contínuo da retroescavadeira:
+* **Lugares:** `P1_Início`, `P2_Pós_Braço`, `P3_Escavar`, `P4_Girar Torre`, `P5_Despejar`, `P6_FIM`.
+* **Transições:** `T1_Posicionar`, `T2_Transição(Decisão)` (paralelismo), `T3_Sincronização`, `T4_Finalizar`, `T5_Aguardando` (retorno cíclico).
+
+#### Matrizes de Entrada ($Pre$), Saída ($Post$) e Incidência ($C = Post - Pre$)
+
+| Lugar | $Pre$ ($T_1 \dots T_5$) | $Post$ ($T_1 \dots T_5$) | $C = Post - Pre$ ($T_1 \dots T_5$) |
+| :--- | :---: | :---: | :---: |
+| **P1 (Início)** | `[1, 0, 0, 0, 0]` | `[0, 0, 0, 0, 1]` | `[-1,  0,  0,  0,  1]` |
+| **P2 (Pós_Braço)** | `[0, 1, 0, 0, 0]` | `[1, 0, 0, 0, 0]` | `[ 1, -1,  0,  0,  0]` |
+| **P3 (Escavar)** | `[0, 0, 1, 0, 0]` | `[0, 1, 0, 0, 0]` | `[ 0,  1, -1,  0,  0]` |
+| **P4 (Girar Torre)** | `[0, 0, 1, 0, 0]` | `[0, 1, 0, 0, 0]` | `[ 0,  1, -1,  0,  0]` |
+| **P5 (Despejar)** | `[0, 0, 0, 1, 0]` | `[0, 0, 1, 0, 0]` | `[ 0,  0,  1, -1,  0]` |
+| **P6 (FIM)** | `[0, 0, 0, 0, 1]` | `[0, 0, 0, 1, 0]` | `[ 0,  0,  0,  1, -1]` |
+
+#### Evolução das Marcações ($M_k = M_{k-1} + C \cdot \sigma_k$)
+* **$M_0$:** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']`
+* **$M_1$ (após $T_1$):** `[0, 1, 0, 0, 0, 0]` — Habilitada: `['T2']`
+* **$M_2$ (após $T_2$):** `[0, 0, 1, 1, 0, 0]` — Habilitada: `['T3']` *(execução paralela em $P_3$ e $P_4$)*
+* **$M_3$ (após $T_3$):** `[0, 0, 0, 0, 1, 0]` — Habilitada: `['T4']` *(sincronização concluída)*
+* **$M_4$ (após $T_4$):** `[0, 0, 0, 0, 0, 1]` — Habilitada: `['T5']`
+* **$M_5$ (após $T_5$):** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']` *(retorno cíclico à marcação inicial)*
+
+#### Como executar o script Python
+```bash
+pip install numpy
+python rede_petri.py
