@@ -55,7 +55,7 @@ O projeto consiste na concepção e no detalhamento de uma **Retroescavadeira Me
 - **Manufatura Aditiva:** Impressão 3D FDM (PLA)
 - **Controle e Processamento:** Arduino Nano (C/C++, `Servo.h`)
 - **Atuadores e Sensores:** Servomotores MG995 e SG90, sensor ultrassônico HC-SR04
-- **Modelagem:** HPSim e CPN Tools (Redes de Petri)
+- **Modelagem e Simulação:** HPSim, CPN Tools e Python (NumPy)
 
 ---
 
@@ -63,16 +63,18 @@ O projeto consiste na concepção e no detalhamento de uma **Retroescavadeira Me
 
 Documentação técnica das modelagens, formulação matricial e simulações computacionais desenvolvidas para o ciclo operacional do braço mecânico articulado (retroescavadeira).
 
-### Estrutura de Arquivos do Repositório
-- `rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação de evolução das marcações ($M_0$ a $M_5$).
-- `Rede Petri _Retro.hps` — Modelagem da Rede de Petri Lugar-Transição no software **HPSim**.
-- `Rede Petri_Escavadeira_Final_colorida.cpn` — Modelagem da Rede de Petri Colorida no software **CPN Tools**.
+### Estrutura de Arquivos (Redes de Petri)
+- 📄 `Relatório Técnico - Redes de Petri .pdf` — Relatório técnico completo contendo a formulação matemática, modelagem no HPSim, simulação em Python e modelagem de alto nível no CPN Tools.
+- 🐍 `rede_petri.py` — Script em Python (NumPy) para cálculo das matrizes e simulação da evolução das marcações ($M_0$ a $M_5$).
+- 🖼️ `rede_petri.re..png` — Captura da saída de execução no terminal validando as matrizes $Pre$, $Post$, $C$ e a evolução das marcações.
+- 🔷 `Rede Petri _Retro.hps` — Modelagem da Rede de Petri Lugar-Transição no software **HPSim**.
+- 🎨 `Rede Petri_Escavadeira_Final_colorida.cpn` — Modelagem da Rede de Petri Colorida no software **CPN Tools**.
 
 ---
 
 ### Etapa 1: Rede de Petri Lugar-Transição e Álgebra Linear (HPSim + Python)
 
-Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T_5$) representando o ciclo contínuo da retroescavadeira:
+Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T_5$) representando o ciclo contínuo e reversível da retroescavadeira (livre de *deadlocks*):
 - **Lugares:** `P1_Início`, `P2_Pós_Braço`, `P3_Escavar`, `P4_Girar Torre`, `P5_Despejar`, `P6_FIM`.
 - **Transições:** `T1_Posicionar`, `T2_Transição(Decisão)` (paralelismo), `T3_Sincronização`, `T4_Finalizar`, `T5_Aguardando` (retorno cíclico).
 
@@ -95,7 +97,7 @@ Rede composta por **6 lugares** ($P_1$ a $P_6$) e **5 transições** ($T_1$ a $T
 - **$M_4$ (após $T_4$):** `[0, 0, 0, 0, 0, 1]` — Habilitada: `['T5']`
 - **$M_5$ (após $T_5$):** `[1, 0, 0, 0, 0, 0]` — Habilitada: `['T1']` *(retorno cíclico à marcação inicial)*
 
-#### Como executar o script Python
+#### Execução e Validação em Python
 
 ```bash
 pip install numpy
@@ -108,109 +110,69 @@ python rede_petri.py
 ```python
 import numpy as np
 
+LUGARES = ["P1", "P2", "P3", "P4", "P5", "P6"]
+TRANSICOES = ["T1", "T2", "T3", "T4", "T5"]
 
-def simular_rede_petri():
-    # Definição dos rótulos dos Lugares (P1 a P6) e Transições (T1 a T5)
-    lugares = [
-        "P1 (Início)",
-        "P2 (Pós_Braço)",
-        "P3 (Escavar)",
-        "P4 (Girar Torre)",
-        "P5 (Despejar)",
-        "P6 (FIM)",
-    ]
-    transicoes = ["T1", "T2", "T3", "T4", "T5"]
+# Pre: o que cada transição consome (linhas = lugares, colunas = transições)
+Pre = np.array([
+    [1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 1]
+])
 
-    # Matriz de Entrada (Pre): arcos de Lugares -> Transições (6x5)
-    Pre = np.array([
-        [1, 0, 0, 0, 0],  # P1
-        [0, 1, 0, 0, 0],  # P2
-        [0, 0, 1, 0, 0],  # P3
-        [0, 0, 1, 0, 0],  # P4
-        [0, 0, 0, 1, 0],  # P5
-        [0, 0, 0, 0, 1],  # P6
-    ])
+# Post: o que cada transição produz
+Post = np.array([
+    [0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0]
+])
 
-    # Matriz de Saída (Post): arcos de Transições -> Lugares (6x5)
-    Post = np.array([
-        [0, 0, 0, 0, 1],  # P1
-        [1, 0, 0, 0, 0],  # P2
-        [0, 1, 0, 0, 0],  # P3
-        [0, 1, 0, 0, 0],  # P4
-        [0, 0, 1, 0, 0],  # P5
-        [0, 0, 0, 1, 0],  # P6
-    ])
+# Matriz de incidência
+C = Post - Pre
 
-    # Matriz de Incidência: C = Post - Pre
-    C = Post - Pre
+# Marcação inicial: 1 ficha em P1
+M = np.array([[1], [0], [0], [0], [0], [0]])
 
-    print("=" * 60)
-    print("MODELAGEM DE REDE DE PETRI - RETROESCAVADEIRA 4-DoF")
-    print("=" * 60)
-    print("\nMatriz de Entrada (Pre):\n", Pre)
-    print("\nMatriz de Saída (Post):\n", Post)
-    print("\nMatriz de Incidência (C = Post - Pre):\n", C)
-    print("\n" + "=" * 60)
-    print("SIMULAÇÃO DA EVOLUÇÃO DAS MARCAÇÕES (M0 a M5)")
-    print("=" * 60)
-
-    # Marcação Inicial M0: 1 ficha em P1 (Início)
-    M = np.array([1, 0, 0, 0, 0, 0])
-
-    def transicoes_habilitadas(marcacao):
-        habilitadas = []
-        for idx, t in enumerate(transicoes):
-            # Uma transição está habilitada se M >= Pre[:, idx] para todos os lugares
-            if np.all(marcacao >= Pre[:, idx]):
-                habilitadas.append(t)
-        return habilitadas
-
-    # Exibe estado inicial M0
-    print(f"\nM0 (Inicial): {M.tolist()} | Habilitada: {transicoes_habilitadas(M)}")
-
-    # Sequência de disparos do ciclo completo: T1 -> T2 -> T3 -> T4 -> T5
-    sequencia_disparos = ["T1", "T2", "T3", "T4", "T5"]
-
-    for passo, t_nome in enumerate(sequencia_disparos, start=1):
-        idx_t = transicoes.index(t_nome)
-
-        # Vetor de disparo sigma_k (1 na posição da transição disparada, 0 nas demais)
-        sigma = np.zeros(len(transicoes), dtype=int)
-        sigma[idx_t] = 1
-
-        # Verifica se o disparo é válido antes de executar
-        if not np.all(M >= Pre[:, idx_t]):
-            raise ValueError(f"Erro: Transição {t_nome} não está habilitada na marcação {M.tolist()}!")
-
-        # Equação fundamental de estado: M_k = M_{k-1} + C * sigma_k
-        M = M + C @ sigma
-
-        # Identifica lugares ativos na marcação atual
-        ativos = [lugares[i] for i, fichas in enumerate(M) if fichas > 0]
-
-        print(
-            f"M{passo} (após {t_nome}): {M.tolist()} "
-            f"| Habilitada: {transicoes_habilitadas(M)} "
-            f"| Ativo: {', '.join(ativos)}"
-        )
-
-    # Verificação de reversibilidade (retorno ao estado inicial M0)
-    M0 = np.array([1, 0, 0, 0, 0, 0])
-    if np.array_equal(M, M0):
-        print("\n[OK] Propriedade verificada: Rede reversível e viva (retornou a M0).")
+print("Matriz Pre:\n", Pre)
+print("Matriz Post:\n", Post)
+print("Matriz de incidência C:\n", C)
+print("M0:", M.ravel().tolist())
 
 
-if __name__ == "__main__":
-    simular_rede_petri()
+def habilitadas(M):
+    return [t for j, t in enumerate(TRANSICOES) if np.all(M >= Pre[:, j:j+1])]
+
+
+print("Habilitadas em M0:", habilitadas(M))
+
+# Simulação de um ciclo completo
+for k, t in enumerate(["T1", "T2", "T3", "T4", "T5"], start=1):
+    j = TRANSICOES.index(t)
+    if not np.all(M >= Pre[:, j:j+1]):
+        raise ValueError(f"{t} não está habilitada")
+    sigma = np.zeros((5, 1), dtype=int)
+    sigma[j, 0] = 1
+    M = M + C @ sigma
+    print(f"M{k} após {t}:", M.ravel().tolist(), "| habilitadas:", habilitadas(M))
 ```
 
 </details>
+
+#### Saída da Simulação Computacional
+
+![Saída da execução do script rede_petri.py](rede_petri.re..png)
 
 ---
 
 ### Etapa 2: Rede de Petri Colorida (CPN Tools)
 
-Modelagem de alto nível com rastreamento de atuadores e temporização das operações.
+Modelagem de alto nível com rastreamento de atuadores, etapas intermediárias de comutação (`B>D Troca Atuador` e `C>D Troca Atuador`) e temporização das operações.
 
 #### Declarações Globais (CPN ML)
 
@@ -234,14 +196,17 @@ fun maxTime(tE, durE, tG, durG) = Int.max(tE + durE, tG + durG);
 #### Fluxo Temporal da Ficha (`"C1"`)
 
 1. **Início (`INICIO`):**
-   - Marcação: `1`("C1", INICIO, [NSA], 0, 0)`
-2. **Posicionamento (`A: POS_BRACO`):**
-   - Marcação: `("C1", POS_BRACO, [CIL_LANCA, CIL_BRACO], 3, 0)` *(duração: $3\text{ u.t.}$)*
-3. **Execução Paralela (`B` e `C`):**
-   - **B (`ESCAVAR`):** `("C1", ESCAVAR, [CIL_BRACO, CIL_CONCHA], 5, 3)` *(término em $t = 8\text{ u.t.}$)*
-   - **C (`GIRAR_TORRE`):** `("C1", GIRAR_TORRE, [MOTOR_GIRO], 4, 3)` *(término em $t = 7\text{ u.t.}$)*
-4. **Sincronização (`D` $\rightarrow$ `DESPEJAR`):**
-   - Cálculo: `maxTime(3, 5, 3, 4) = 8`
-   - Marcação: `("C1", DESPEJAR, [CIL_CONCHA], 2, 8)` *(duração: $2\text{ u.t.}$)*
-5. **Encerramento (`Fim` $\rightarrow$ `FIM`):**
-   - Marcação: `("C1", FIM, [NSA], 0, 10)` *(tempo total do ciclo: $10\text{ u.t.}$)*
+   - Marcação inicial: `1`("C1", INICIO, [NSA], 0, 0)`
+2. **Transição `A` — Posicionamento (`A: POS_BRAÇO`):**
+   - Saída: `("C1", POS_BRACO, [CIL_LANCA, CIL_BRACO], 3, 0)` *(duração: $3\text{ u.t.}$ a partir de $t = 0$)*
+3. **Transição `>B>C` — Execução Paralela (`B` e `C`):**
+   - **B (`B: ESCAVAR`):** `("C1", ESCAVAR, [CIL_BRACO, CIL_CONCHA], 5, 3)` *(duração: $5\text{ u.t.}$, término em $t = 8\text{ u.t.}$)*
+   - **C (`C: GIRAR TORRE`):** `("C1", GIRAR_TORRE, [MOTOR_GIRO], 4, 3)` *(duração: $4\text{ u.t.}$, término em $t = 7\text{ u.t.}$)*
+4. **Transições `B>D` e `C>D` — Troca de Atuadores:**
+   - **Lugar `B>D Troca Atuador`:** `("C1", ESCAVAR, [CIL_CONCHA], 5, 3)`
+   - **Lugar `C>D Troca Atuador`:** `("C1", GIRAR_TORRE, [CIL_CONCHA], 4, 3)`
+5. **Transição `>D` — Sincronização Temporal (`DESPEJAR`):**
+   - Cálculo: `maxTime(3, 5, 3, 4) = Int.max(8, 7) = 8`
+   - Saída: `("C1", DESPEJAR, [CIL_CONCHA], 2, 8)` *(início em $t = 8\text{ u.t.}$, duração: $2\text{ u.t.}$)*
+6. **Transição `>Fim` — Encerramento (`FIM`):**
+   - Saída: `("C1", FIM, [NSA], 0, 10)` *(tempo total do ciclo: $10\text{ u.t.}$)*
